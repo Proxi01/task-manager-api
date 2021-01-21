@@ -93,7 +93,11 @@ router.delete("/task/:id", auth, async (req, res) => {
     const isValidId = mongoose.Types.ObjectId.isValid(_id);
     if (!isValidId) return res.status(422).send("The id is wrong");
 
-    await Task.findOneAndDelete({ _id, owner: req.user._id });
+    const task = await Task.findOneAndDelete({ _id, owner: req.user._id });
+
+    if(!task){
+      res.status(404).send()
+    }
     res.send();
   } catch (e) {
     res.status(400).send();
